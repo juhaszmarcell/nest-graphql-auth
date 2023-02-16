@@ -16,19 +16,20 @@ $ npm install
 Rename .env.example to .env. Modify database url and your secret.
 ```
 
-## Running the app
+## Scripts to running the app
 
 ```bash
 # prisma generate
 npm run db:generate
+
 # start database
 $ npm run start_env:postgres
 
 # clean database
-npm run clean_env:postgres
+$ npm run clean_env:postgres
 
 # db migration
-npm run db:migrate:dev | prod
+$ npm run db:migrate:dev | prod
 
 # development
 $ npm run start
