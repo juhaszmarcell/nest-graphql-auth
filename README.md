@@ -1,4 +1,4 @@
-#nest-graphql-auth
+# nest-graphql-auth
 
 This repository is a skeleton nestjs app featuring with graphql, prisma and postgresql.
 
