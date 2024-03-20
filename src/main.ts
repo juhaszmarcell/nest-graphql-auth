@@ -1,21 +1,22 @@
-import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import {
-  ExpressAdapter,
-  NestExpressApplication,
-} from '@nestjs/platform-express';
-
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { Config } from './config/config';
+import { BaseNestFactory } from './nest-factory/nest.factory';
+import { PrismaModule } from './prisma/prisma.module';
+import { setup, startupDbCheck } from './setup';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-    new ExpressAdapter(),
-  );
+  const app = await BaseNestFactory.createExpressApplication(AppModule, {
+    customShutdownHooksEnabler: PrismaModule.enableShutdownHooks,
+  });
+
   const config = app.get(Config);
+
+  await startupDbCheck(config);
+
+  // App setup
+  await setup(app);
 
   app.setGlobalPrefix('api');
   app.enableCors({
@@ -23,6 +24,7 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept',
     preflightContinue: true,
+    credentials: true,
   });
   // Swagger setup
   const documentBuilder = new DocumentBuilder()
@@ -39,8 +41,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, documentBuilder);
   SwaggerModule.setup('api', app, document);
-
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const { port, host } = config.server;
   await app.listen(port, host);

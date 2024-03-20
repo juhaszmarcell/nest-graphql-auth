@@ -7,4 +7,9 @@ export class Config {
     port: get('SERVER_PORT').default('3000').asString(),
   };
   JWTAccessSecretKey = get('JWT_SECRET_KEY').default('mysecret').asString();
+  db = {
+    healthCheckTimeout: get('DB_HEALTH_CHECK_TIMEOUT')
+      .default(10000)
+      .asIntPositive(),
+  };
 }

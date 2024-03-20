@@ -9,17 +9,14 @@ import { PrismaService } from './prisma.service';
 })
 export class PrismaModule {
   /**
-   * Use this static method in place of `app.enableShutdownHooks()`
+   * @deprecated This method is no longer needed with Prisma 5,
+   * use regular `app.enableShutdownHooks()` instead.
    *
-   * Prisma interferes with NestJS enableShutdownHooks. Prisma listens for shutdown signals and will call process.exit()
-   * before the application shutdown hooks fire. To deal with this, we need to add a listener for Prisma beforeExit event.
+   * Reference: https://www.prisma.io/docs/guides/upgrade-guides/upgrading-versions/upgrading-to-prisma-5#removal-of-the-beforeexit-hook-from-the-library-engine
    *
    * @param app the application instance
    */
   static enableShutdownHooks(app: INestApplicationContext) {
-    const prisma = app.select(PrismaModule).get(PrismaService);
-    prisma.$on('beforeExit', async () => {
-      await app.close();
-    });
+    app.enableShutdownHooks();
   }
 }

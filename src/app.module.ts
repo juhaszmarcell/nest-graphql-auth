@@ -4,28 +4,18 @@ import { PrismaModule } from './prisma/prisma.module';
 import { HealthModule } from './health/health.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      plugins: [ApolloServerPluginInlineTraceDisabled()],
       driver: ApolloDriver,
       autoSchemaFile: false,
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      cors: {
-        credentials: true,
-        origin: true,
-      },
+      playground: true,
       typePaths: ['./src/**/*.graphql'],
-      definitions: {
-        emitTypenameField: true,
-        path: join(process.cwd(), 'src/graphql/graphqlTypes.ts'),
-        outputAs: 'interface',
-      },
     }),
     ConfigModule,
     PrismaModule,
