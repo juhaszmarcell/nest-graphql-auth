@@ -40,7 +40,7 @@
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^10.3.7",
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/swagger": "^7.1.16",
+    "@nestjs/swagger": "^7.3.1",
     "@nestjs/terminus": "^10.1.1",
     "@nestjs/testing": "^10.3.7",
     "@prisma/client": "^5.11.0",
